@@ -10,177 +10,159 @@
             --color-primario: #00e5ff;
             --color-secundario: #9d00ff;
             --color-acento: #fbff00;
-            --sombra-texto: 2px 2px 10px rgba(0, 0, 0, 0.8);
         }
 
-        /* --- CORRECCIÓN CLAVE 1: Asegurar que el viewport sea de 100vh --- */
-        body, html {
+        /* --- RESET Y ESTRUCTURA BASE --- */
+        * { box-sizing: border-box; }
+
+        body {
             margin: 0;
             padding: 0;
-            min-height: 100vh; /* Reemplaza height: 100% */
-            height: 100vh;      /* Asegura que ocupe todo */
-            width: 100vw;       /* Asegura que ocupe todo el ancho */
             font-family: 'Roboto', sans-serif;
             color: white;
-            background-color: black;
-            text-align: center;
-            overflow-x: hidden; /* Evita scrolls horizontales */
-            display: flex;
-            justify-content: center;
+            /* Eliminamos el color negro de fondo para que no tape nada */
+            background: transparent; 
+            overflow-x: hidden;
         }
 
-        /* --- VIDEO DE FONDO CORREGIDO --- */
-        #video-background {
-            position: fixed;
-            top: 0; /* Asegura que comience desde arriba */
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: -2;
-            object-fit: cover; /* Recorta el video para llenar el espacio sin deformar */
-        }
-
-        /* Capa oscura para legibilidad CORREGIDA */
-        .overlay {
+        /* --- VIDEO DE FONDO (LA SOLUCIÓN REAL) --- */
+        .contenedor-video {
             position: fixed;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -10; /* Lo mandamos al fondo del todo */
+            overflow: hidden;
+        }
+
+        #video-fondo {
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.5); /* Ajusta la opacidad si es necesario */
-            z-index: -1;
+            object-fit: cover; /* Esto hace que el video cubra toda la pantalla sin deformarse */
+            position: absolute;
+            top: 0;
+            left: 0;
         }
 
-        /* --- CONTENEDOR PRINCIPAL AJUSTADO --- */
-        .main-container {
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            max-width: 450px; /* Ajuste móvil */
+        /* Capa oscura para que el texto sea legible */
+        .capa-oscura {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            margin: 0 auto;
-            /* Permite scroll vertical de este contenedor si el contenido es largo */
             height: 100%;
-            overflow-y: auto; 
-            box-sizing: border-box; /* Asegura que el padding no añada ancho */
+            background: rgba(0, 0, 0, 0.6); /* 60% de oscuridad */
+            z-index: -5; /* Encima del video, debajo del texto */
         }
 
-        /* --- RESTO DE ESTILOS (IGUALES) --- */
+        /* --- CONTENIDO --- */
+        .contenido {
+            position: relative;
+            z-index: 10; /* Encima de todo */
+            width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* --- ESTILOS VISUALES --- */
         h1 {
             font-family: 'Luckiest Guy', cursive;
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: var(--color-acento);
             text-shadow: 4px 4px var(--color-secundario);
             margin: 20px 0;
-            animation: pulse 2s infinite;
+            line-height: 1;
         }
 
-        .image-placeholder {
+        .foto-central {
             width: 100%;
-            border-radius: 15px;
+            border-radius: 20px;
             border: 4px solid var(--color-primario);
             box-shadow: 0 0 20px var(--color-primario);
-            margin-bottom: 20px;
-        }
-
-        .info-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
             margin: 20px 0;
-            word-wrap: break-word; /* Evita que el texto largo rompa el contenedor */
         }
 
-        .info-card h2 {
+        .tarjeta-info {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--color-secundario);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(5px);
+        }
+
+        .tarjeta-info h2 {
             font-family: 'Luckiest Guy', cursive;
             color: var(--color-primario);
-            margin: 10px 0;
+            margin-bottom: 10px;
         }
 
-        .info-card p {
-            margin: 10px 0;
-            font-size: 1.1rem;
-        }
-
-        .btn-rsvp {
-            display: block; /* Ocupa todo el ancho */
-            background: linear-gradient(45deg, #4caf50, #8bc34a);
+        .boton-confirmar {
+            display: block;
+            background: #4caf50;
             color: white;
-            padding: 15px 30px;
+            padding: 15px;
             text-decoration: none;
             font-family: 'Luckiest Guy', cursive;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             border-radius: 50px;
+            border: 3px solid white;
             margin: 30px 0;
-            border: 2px solid white;
-            transition: transform 0.2s;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
         }
 
-        .btn-rsvp:active {
-            transform: scale(0.95);
-        }
-
-        .map-container {
+        /* --- MAPA --- */
+        .contenedor-mapa {
             width: 100%;
             height: 250px;
             border-radius: 15px;
             overflow: hidden;
             border: 2px solid var(--color-primario);
-            margin-top: 15px;
         }
 
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        iframe { width: 100%; height: 100%; border: none; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
 
-    <video autoplay muted loop playsinline id="video-background">
-        <source src="images/video_fortnite.mp4" type="video/mp4">
-    </video>
-    <div class="overlay"></div>
+    <div class="contenedor-video">
+        <video autoplay muted loop playsinline id="video-fondo">
+            <source src="images/video_fortnite.mp4" type="video/mp4">
+        </video>
+    </div>
 
-    <div class="main-container">
+    <div class="capa-oscura"></div>
+
+    <div class="contenido">
         <h1>¡VICTORY ROYALE!</h1>
         
-        <img src="images/foto_portada.jpg" alt="Fiesta Fortnite" class="image-placeholder">
+        <img src="images/foto_portada.jpg" alt="Portada" class="foto-central">
 
-        <div class="info-card">
-            <h2>DETALLES DE LA MISIÓN</h2>
-            <p><strong>SALÓN:</strong> Chiquimundo</p>
-            <p><strong>HORARIO:</strong> 4:00 PM - 9:00 PM</p>
-            <p><strong>DIRECCIÓN:</strong> La Florida 701, Aztlán, 34129 Durango, Dgo.</p>
+        <div class="tarjeta-info">
+            <h2>MISIÓN: CUMPLE DE ROMÁN</h2>
+            <p>📅 <strong>CUÁNDO:</strong> Hoy mismo</p>
+            <p>⏰ <strong>HORA:</strong> 4:00 PM - 9:00 PM</p>
+            <p>📍 <strong>DÓNDE:</strong> Salón Chiquimundo</p>
+            <p style="font-size: 0.9rem;">La Florida 701, Aztlán, 34129 Durango, Dgo.</p>
         </div>
 
-        <a href="TU_LINK_DE_GOOGLE_FORMS" class="btn-rsvp">CONFIRMAR ASISTENCIA</a>
+        <a href="TU_LINK_DE_FORMULARIO" class="boton-confirmar">¡ME UNO AL SQUAD!</a>
 
-        <div class="info-card">
-            <h2>UBICACIÓN</h2>
-            <div class="map-container">
-                <iframe 
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.200000000000!2d-104.6500000!3d24.0300000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjTCsDAxJzQ4LjAiTiAxMDTCsDM5JzAwLjAiVw!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx" 
-                    allowfullscreen="" loading="lazy">
-                </iframe>
+        <div class="tarjeta-info">
+            <h2>COORDENADAS</h2>
+            <div class="contenedor-mapa">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.2059344465493!2d-104.66170682559533!3d24.023812877114175!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x869bb799516640c3%3A0xe54955b552306796!2sChiquimundo!5e0!3m2!1ses-419!2smx!4v1711200000000!5m2!1ses-419!2smx"></iframe>
             </div>
-            <p style="margin-top: 15px; font-size: 1rem;">
-                <a href="https://maps.app.goo.gl/u6hLsWaRUDcSrxq56?g_st=aw" style="color: var(--color-primario); text-decoration: none; border-bottom: 1px solid;">Abrir en Google Maps</a>
-            </p>
+            <br>
+            <a href="https://maps.app.goo.gl/u6hLsWaRUDcSrxq56?g_st=aw" style="color: var(--color-primario);">Abrir en Maps</a>
         </div>
 
-        <footer style="margin-top: 40px; margin-bottom: 30px; opacity: 0.7; font-size: 0.9rem;">
-            Prepárate para el mejor Squad del año
+        <footer style="padding: 20px; opacity: 0.6; font-size: 0.8rem;">
+            Diseñado para el Battle Bus 2026
         </footer>
     </div>
 
