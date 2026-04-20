@@ -21,11 +21,11 @@
             font-family: 'Roboto', sans-serif;
             color: white;
             background: black; 
-            overflow: hidden; /* Bloqueamos scroll hasta que inicien */
+            overflow: hidden; /* Se bloquea hasta que presionen iniciar */
         }
 
-        /* --- PANTALLA DE INICIO (OVERLAY) --- */
-        #pantalla-inicial {
+        /* --- PANTALLA INICIAL (EL OVERLAY) --- */
+        #capa-inicial {
             position: fixed;
             top: 0;
             left: 0;
@@ -41,7 +41,7 @@
             transition: opacity 0.8s ease;
         }
 
-        .boton-iniciar {
+        .boton-entrada {
             font-family: 'Luckiest Guy', cursive;
             font-size: 2rem;
             padding: 20px 40px;
@@ -51,11 +51,29 @@
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 0 30px var(--amarillo-vbucks);
-            animation: pulse 1.5s infinite;
+            animation: latido 1.5s infinite;
+        }
+
+        /* --- ANIMACIONES --- */
+        @keyframes neon-cambiante {
+            0%, 100% { border-color: var(--azul-fortnite); box-shadow: 0 0 15px var(--azul-fortnite); }
+            50% { border-color: var(--morado-fortnite); box-shadow: 0 0 30px var(--morado-fortnite); }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); text-shadow: 2px 2px var(--morado-fortnite); }
+            20% { transform: translate(-2px, 2px); text-shadow: -2px -2px var(--azul-fortnite); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes latido {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* --- VIDEO DE FONDO --- */
-        .contenedor-video {
+        .contenedor-video-fondo {
             position: fixed;
             top: 0;
             left: 0;
@@ -82,7 +100,7 @@
         }
 
         /* --- CONTENIDO --- */
-        .contenido {
+        .contenido-principal {
             position: relative;
             z-index: 10;
             width: 100%;
@@ -90,7 +108,7 @@
             margin: 0 auto;
             padding: 20px;
             text-align: center;
-            display: none; /* Oculto hasta que den clic */
+            display: none; /* Se activa por JS */
         }
 
         h1 {
@@ -101,26 +119,31 @@
             animation: glitch 1s infinite;
         }
 
-        /* --- VIDEO DE PORTADA (CON MÚSICA) --- */
-        .video-portada-frame {
+        .video-musical-frame {
             width: 100%;
             border-radius: 20px;
             border: 4px solid var(--azul-fortnite);
-            box-shadow: 0 0 25px var(--azul-fortnite);
             margin: 20px 0;
-            animation: flotar 3s infinite ease-in-out;
+            animation: neon-cambiante 3s infinite ease-in-out;
         }
 
-        .tarjeta-info {
-            background: rgba(0, 0, 0, 0.8);
+        .tarjeta-gamer {
+            background: rgba(0, 0, 0, 0.85);
             border: 2px solid var(--morado-fortnite);
             border-radius: 20px;
             padding: 25px;
             margin: 25px 0;
             backdrop-filter: blur(10px);
+            animation: neon-cambiante 4s infinite;
         }
 
-        .boton-confirmar {
+        .tarjeta-gamer h2 {
+            font-family: 'Luckiest Guy', cursive;
+            color: var(--azul-fortnite);
+            margin-bottom: 15px;
+        }
+
+        .boton-rsvp {
             display: block;
             background: var(--verde-skin);
             color: white;
@@ -131,44 +154,48 @@
             border-radius: 50px;
             border: 3px solid white;
             margin: 30px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.4);
+            animation: latido 1.5s infinite;
+        }
+
+        .btn-maps {
+            display: inline-block;
+            margin-top: 15px;
+            color: var(--azul-fortnite);
+            text-decoration: none;
+            font-weight: bold;
+            border: 1px solid var(--azul-fortnite);
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-maps:hover {
+            background: var(--azul-fortnite);
+            color: black;
         }
 
         .contenedor-mapa {
             width: 100%;
-            height: 280px;
+            height: 250px;
             border-radius: 15px;
             overflow: hidden;
-            border: 3px solid var(--azul-fortnite);
+            border: 2px solid var(--azul-fortnite);
+            margin-top: 15px;
         }
 
         iframe { width: 100%; height: 100%; border: none; }
 
-        @keyframes glitch {
-            0% { transform: translate(0); text-shadow: 2px 2px var(--morado-fortnite); }
-            20% { transform: translate(-2px, 2px); }
-            100% { transform: translate(0); }
-        }
-
-        @keyframes flotar {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            70% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
 
-    <div id="pantalla-inicial">
+    <div id="capa-inicial">
         <h2 style="font-family: 'Luckiest Guy'; font-size: 2.5rem; margin-bottom: 30px;">MISIÓN DETECTADA</h2>
-        <button class="boton-iniciar" onclick="iniciarExperiencia()">ENTRAR AL BUS</button>
+        <button class="boton-entrada" onclick="desplegarInvitacion()">ENTRAR AL BUS</button>
     </div>
 
-    <div class="contenedor-video">
+    <div class="contenedor-video-fondo">
         <video autoplay muted loop playsinline id="video-fondo">
             <source src="images/video_fortnite.mp4" type="video/mp4">
         </video>
@@ -176,46 +203,54 @@
 
     <div class="capa-oscura"></div>
 
-    <div class="contenido" id="contenedor-principal">
+    <div class="contenido-principal" id="invitacion-main">
         <h1>¡BATTLE PARTY!</h1>
         
-        <video id="video-musical" class="video-portada-frame" playsinline>
+        <video id="video-musica" class="video-musical-frame" playsinline>
             <source src="images/videoFiesta.mp4" type="video/mp4">
         </video>
 
-        <div class="tarjeta-info">
+        <div class="tarjeta-gamer">
             <h2>DETALLES DEL SQUAD</h2>
+            <p>📅 <strong>FECHA:</strong> 5 de mayo</p>
             <p>⏰ <strong>HORARIO:</strong> 4:00 PM - 9:00 PM</p>
             <p>📍 <strong>SALÓN:</strong> Chiquimundo</p>
-            <p style="font-size: 0.9rem;">La Florida 701, Aztlán, 34129 Durango, Dgo.</p>
+            <p style="font-size: 0.8rem;">La Florida 701, Aztlán, 34129 Durango, Dgo.</p>
         </div>
 
-        <a href="TU_LINK_DE_FORMULARIO" class="boton-confirmar">CONFIRMAR ASISTENCIA</a>
+        <a href="https://forms.gle/tj3CqQuTtdtAk1SW9" class="boton-rsvp">CONFIRMAR ASISTENCIA</a>
 
-        <div class="tarjeta-info">
+        <div class="tarjeta-gamer">
             <h2>ZONA DE ATERRIZAJE</h2>
             <div class="contenedor-mapa">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3644.2082260654!2d-104.6465056!3d24.0235338!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x869bb7956a632731%3A0xc069f2010c73295!2sLa%20Florida%20701%2C%20Aztl%C3%A1n%2C%2034129%20Durango%2C%20Dgo.!5e0!3m2!1ses-419!2smx!4v1714100000000" allowfullscreen="" loading="lazy"></iframe>
+                <iframe src="https://maps.app.goo.gl/HLPQFYXiehADL59H6" allowfullscreen="" loading="lazy"></iframe>
             </div>
+            <a href="https://maps.app.goo.gl/HLPQFYXiehADL59H6" target="_blank" class="btn-maps">
+                ➔ ABRIR EN GOOGLE MAPS
+            </a>
         </div>
+
+        <footer style="padding: 20px; opacity: 0.5; font-size: 0.8rem;">
+            PREPÁRATE PARA EL SALTO // 2026
+        </footer>
     </div>
 
     <script>
-        function iniciarExperiencia() {
-            const overlay = document.getElementById('pantalla-inicial');
-            const contenido = document.getElementById('contenedor-principal');
-            const videoMusica = document.getElementById('video-musical');
+        function desplegarInvitacion() {
+            const capaCarga = document.getElementById('capa-inicial');
+            const bloquePrincipal = document.getElementById('invitacion-main');
+            const videoFiesta = document.getElementById('video-musica');
 
-            // 1. Ocultar la pantalla de inicio
-            overlay.style.opacity = '0';
+            capaCarga.style.opacity = '0';
+            
             setTimeout(() => {
-                overlay.style.display = 'none';
-                contenido.style.display = 'block';
-                document.body.style.overflow = 'auto'; // Habilitar scroll
+                capaCarga.style.display = 'none';
+                bloquePrincipal.style.display = 'block';
+                document.body.style.overflow = 'auto'; // Permitir scroll
                 
-                // 2. Intentar reproducir el video con música
-                videoMusica.play().catch(error => {
-                    console.log("El navegador bloqueó el audio automático:", error);
+                // Reproducir el video con sonido ahora que hubo interacción
+                videoFiesta.play().catch(error => {
+                    console.log("Audio bloqueado por el sistema", error);
                 });
             }, 800);
         }
