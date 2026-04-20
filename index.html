@@ -13,46 +13,59 @@
             --sombra-texto: 2px 2px 10px rgba(0, 0, 0, 0.8);
         }
 
+        /* --- CORRECCIÓN CLAVE 1: Asegurar que el viewport sea de 100vh --- */
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
+            min-height: 100vh; /* Reemplaza height: 100% */
+            height: 100vh;      /* Asegura que ocupe todo */
+            width: 100vw;       /* Asegura que ocupe todo el ancho */
             font-family: 'Roboto', sans-serif;
             color: white;
             background-color: black;
             text-align: center;
+            overflow-x: hidden; /* Evita scrolls horizontales */
+            display: flex;
+            justify-content: center;
         }
 
-        /* --- VIDEO DE FONDO --- */
+        /* --- VIDEO DE FONDO CORREGIDO --- */
         #video-background {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
+            top: 0; /* Asegura que comience desde arriba */
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: -2;
-            object-fit: cover;
+            object-fit: cover; /* Recorta el video para llenar el espacio sin deformar */
         }
 
-        /* Capa oscura para legibilidad */
+        /* Capa oscura para legibilidad CORREGIDA */
         .overlay {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5); /* Ajusta la opacidad si es necesario */
             z-index: -1;
         }
 
+        /* --- CONTENEDOR PRINCIPAL AJUSTADO --- */
         .main-container {
             position: relative;
             z-index: 1;
             padding: 20px;
-            max-width: 500px;
+            max-width: 450px; /* Ajuste móvil */
+            width: 100%;
             margin: 0 auto;
+            /* Permite scroll vertical de este contenedor si el contenido es largo */
+            height: 100%;
+            overflow-y: auto; 
+            box-sizing: border-box; /* Asegura que el padding no añada ancho */
         }
 
+        /* --- RESTO DE ESTILOS (IGUALES) --- */
         h1 {
             font-family: 'Luckiest Guy', cursive;
             font-size: 3rem;
@@ -62,7 +75,6 @@
             animation: pulse 2s infinite;
         }
 
-        /* --- IMAGEN CENTRAL --- */
         .image-placeholder {
             width: 100%;
             border-radius: 15px;
@@ -71,7 +83,6 @@
             margin-bottom: 20px;
         }
 
-        /* --- TARJETA DE INFORMACIÓN --- */
         .info-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -79,6 +90,7 @@
             padding: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             margin: 20px 0;
+            word-wrap: break-word; /* Evita que el texto largo rompa el contenedor */
         }
 
         .info-card h2 {
@@ -87,8 +99,13 @@
             margin: 10px 0;
         }
 
+        .info-card p {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
         .btn-rsvp {
-            display: inline-block;
+            display: block; /* Ocupa todo el ancho */
             background: linear-gradient(45deg, #4caf50, #8bc34a);
             color: white;
             padding: 15px 30px;
@@ -96,16 +113,16 @@
             font-family: 'Luckiest Guy', cursive;
             font-size: 1.5rem;
             border-radius: 50px;
-            margin: 20px 0;
+            margin: 30px 0;
             border: 2px solid white;
             transition: transform 0.2s;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.4);
         }
 
         .btn-rsvp:active {
             transform: scale(0.95);
         }
 
-        /* --- MAPA --- */
         .map-container {
             width: 100%;
             height: 250px;
@@ -157,12 +174,12 @@
                     allowfullscreen="" loading="lazy">
                 </iframe>
             </div>
-            <p style="margin-top: 10px; font-size: 0.9rem;">
-                <a href="https://maps.app.goo.gl/u6hLsWaRUDcSrxq56?g_st=aw" style="color: var(--color-primario);">Abrir en Google Maps</a>
+            <p style="margin-top: 15px; font-size: 1rem;">
+                <a href="https://maps.app.goo.gl/u6hLsWaRUDcSrxq56?g_st=aw" style="color: var(--color-primario); text-decoration: none; border-bottom: 1px solid;">Abrir en Google Maps</a>
             </p>
         </div>
 
-        <footer style="margin-bottom: 30px; opacity: 0.7; font-size: 0.8rem;">
+        <footer style="margin-top: 40px; margin-bottom: 30px; opacity: 0.7; font-size: 0.9rem;">
             Prepárate para el mejor Squad del año
         </footer>
     </div>
